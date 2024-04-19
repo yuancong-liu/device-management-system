@@ -7,10 +7,9 @@ export type DeviceType = 'iPhone' | 'iPad' | 'MacBook' | 'Pc';
  * The status of the device.
  */
 export type DeviceStatus =
-  | 'maintenance'
+  | 'repairing'
   | 'in-use'
   | 'available'
-  | 'unavailable'
   | 'lost'
   | 'recycled'
   | 'disposed'
@@ -131,7 +130,7 @@ export type Device = {
    * The user of the device.
    * If the device is not assigned to a user, this field is undefined.
    */
-  user: User | undefined;
+  user?: User;
   /**
    * The details of the device.
    */

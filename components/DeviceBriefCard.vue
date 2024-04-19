@@ -1,35 +1,54 @@
 <template>
   <u-card>
     <template #header>
-      {{ iPhone.id }} - {{ iPhone.details.model }}
+      <div class="flex flex-col">
+        <span class="font-bold">{{ device.id }}</span>
+        <span class="text-sm text-slate-500">
+          {{ device.details.model }}
+          {{ device.details.chip && ` - ${device.details.chip}` }}
+        </span>
+      </div>
     </template>
-
-    {{ iPhone.status }} - {{ iPhone.user?.name }}
+    <div class="flex w-full flex-col gap-2">
+      <div class="flex justify-center">
+        <u-skeleton class="h-36 w-36" />
+      </div>
+      <span class="font-bold">{{ deviceStatus }}</span>
+      <div v-if="device.user" class="flex items-baseline gap-2">
+        <u-button color="black" variant="link" :padded="false">
+          <span>{{ device.user?.name }}</span>
+        </u-button>
+        <span class="text-xs text-slate-500">/ {{ device.user?.id }}</span>
+      </div>
+      <div v-else class="">
+        <u-button variant="link" :padded="false">
+          <span>Assign a user</span>
+        </u-button>
+      </div>
+    </div>
     <template #footer>
-      <u-button>Details</u-button>
+      <div class="flex w-full justify-end">
+        <u-button @click="handleClick">Details</u-button>
+      </div>
     </template>
-
   </u-card>
 </template>
 
 <script setup lang="ts">
-import type { Device } from '~/types/devices';
+import type { Device, DeviceStatus } from '~/types/device';
+import { DEVICE_STATUS } from '~/constants/device';
 
-const iPhone: Device = {
-  id: 'DEV-00164',
-  type: 'iPhone',
-  status: 'in-use',
-  lastUpdate: '2024/04/17',
-  dayOfPurchase: '2024/04/17',
-  user: {
-    name: 'Paul LIU',
-    id: 'STF-0532',
-    email: 'satoshi.liu@icloud.com',
-  },
-  details: {
-    color: 'Space Gray',
-    model: 'iPhone 15 Pro Max',
-    serialNumber: '1234567890',
-  },
+const props = defineProps<{
+  device: Device;
+}>();
+
+const emits = defineEmits(['selectDevice']);
+
+const handleClick = () => {
+  emits('selectDevice', props.device.id);
 };
+
+const deviceStatus = computed(() => {
+  return DEVICE_STATUS[props.device.status as DeviceStatus];
+});
 </script>
