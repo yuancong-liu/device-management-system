@@ -1,20 +1,39 @@
 <template>
-  <main class="m-auto max-w-5xl py-6">
-    <v-container
-      class="grid w-full grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-4"
-    >
-      <device-brief-card
-        v-for="device in devices"
-        :key="device.id"
-        :device="device"
-        @select-device="onSelectDevice"
-      />
-    </v-container>
-
+  <div>
+    <u-container class="flex flex-col gap-8">
+      <u-container
+        class="grid w-full grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-4"
+      >
+        <device-brief-card
+          v-for="device in devices"
+          :key="device.id"
+          :device="device"
+          @select-device="onSelectDevice"
+        />
+      </u-container>
+      <u-container class="flex flex-col items-center">
+        <u-link
+          to="/components"
+          class="text-primary underline underline-offset-2 transition-all hover:text-slate-700"
+        >
+          Components ✅
+        </u-link>
+      </u-container>
+    </u-container>
     <u-modal v-model="modalProps.isOpen">
       <u-card v-if="selectedDevice">
         <template #header>
-          <h2 class="text-xl font-bold">{{ selectedDevice.id }}</h2>
+          <div class="flex justify-between">
+            <h2 class="text-xl font-bold">{{ selectedDevice.id }}</h2>
+            <u-button
+              color="black"
+              variant="link"
+              :padded="false"
+              @click="onClose"
+            >
+              ❌
+            </u-button>
+          </div>
         </template>
         <div class="flex flex-col">
           <div class="flex gap-2">
@@ -28,7 +47,6 @@
           </div>
         </template>
       </u-card>
-
       <u-card v-else>
         <h2 class="text-xl font-bold">No device selected</h2>
         <template #footer>
@@ -38,7 +56,7 @@
         </template>
       </u-card>
     </u-modal>
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -53,6 +71,10 @@ const selectedDevice: Device | undefined = computed(() =>
 const onSelectDevice = (deviceId: string) => {
   modalProps.value.isOpen = true;
   modalProps.value.deviceId = deviceId;
+};
+
+const onClose = () => {
+  modalProps.value.isOpen = false;
 };
 
 const devices: Device[] = [
